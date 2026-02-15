@@ -1,0 +1,184 @@
+.landing {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.landing-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+.landing-bg-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.5) 40%,
+    rgba(0, 0, 0, 0.3) 60%,
+    transparent 100%
+  );
+  z-index: 1;
+}
+
+.landing-bg-tiles {
+  position: absolute;
+  inset: 0;
+  background-image: url('https://picsum.photos/seed/netflix1/400/225'),
+    url('https://picsum.photos/seed/netflix2/400/225'),
+    url('https://picsum.photos/seed/netflix3/400/225'),
+    url('https://picsum.photos/seed/netflix4/400/225'),
+    url('https://picsum.photos/seed/netflix5/400/225');
+  background-size: 20% 30%;
+  background-repeat: repeat;
+  filter: brightness(0.35) saturate(0.8);
+  opacity: 0.9;
+}
+
+.landing-header {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 3rem;
+}
+
+.landing-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--netflix-red);
+  letter-spacing: 0.02em;
+}
+
+.landing-header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.landing-lang {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.6rem;
+  background: transparent;
+  color: var(--netflix-white);
+  font-size: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 4px;
+}
+
+.landing-lang-icon {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.landing-lang-chevron {
+  font-size: 0.6rem;
+  opacity: 0.8;
+}
+
+.landing-sign-in {
+  padding: 0.45rem 1rem;
+  background: var(--netflix-red);
+  color: var(--netflix-white);
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.landing-sign-in:hover {
+  background: var(--netflix-red-hover);
+}
+
+.landing-hero {
+  position: relative;
+  z-index: 5;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem 1.5rem 8rem;
+}
+
+.landing-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  max-width: 640px;
+  line-height: 1.15;
+  margin-bottom: 0.75rem;
+}
+
+.landing-sub {
+  font-size: 1.25rem;
+  margin-bottom: 1.25rem;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.landing-cta-text {
+  font-size: 1.1rem;
+  margin-bottom: 1.25rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.landing-email-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  max-width: 600px;
+  width: 100%;
+}
+
+.landing-email-input {
+  flex: 1;
+  min-width: 280px;
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  color: var(--netflix-white);
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 4px;
+  outline: none;
+}
+
+.landing-email-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.landing-email-input:focus {
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+.landing-get-started {
+  padding: 1rem 1.5rem;
+  background: var(--netflix-red);
+  color: var(--netflix-white);
+  font-size: 1.25rem;
+  font-weight: 600;
+  border-radius: 4px;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.landing-get-started:hover {
+  background: var(--netflix-red-hover);
+}
+
+.landing-bottom-banner {
+  position: relative;
+  z-index: 5;
+  padding: 0.75rem 1.5rem;
+  background: rgba(88, 51, 128, 0.95);
+  color: var(--netflix-white);
+  text-align: center;
+  font-size: 0.95rem;
+}
