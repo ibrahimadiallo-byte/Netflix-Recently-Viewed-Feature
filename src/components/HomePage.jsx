@@ -4,7 +4,83 @@ import './HomePage.css';
 
 export default function HomePage({ onSignOut }) {
   const [profileOpen, setProfileOpen] = useState(false);
+  const [hero, setHero] = useState(heroContent);
+  const [rows, setRows] = useState(contentRows);
   const profileRef = useRef(null);
+
+  useEffect(() => {
+    const tmdbKey = import.meta.env.VITE_TMDB_KEY;
+    if (!tmdbKey) return;
+
+    let canceled = false;
+    const img = (path, size = 'w500') =>
+      path ? `https://image.tmdb.org/t/p/${size}${path}` : null;
+
+    async function loadTmdb() {
+      try {
+        const [trendingRes, moviesRes, tvRes] = await Promise.all([
+          fetch(`https://api.themoviedb.org/3/trending/all/week?api_key=${tmdbKey}`),
+          fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${tmdbKey}`),
+          fetch(`https://api.themoviedb.org/3/tv/popular?api_key=${tmdbKey}`),
+        ]);
+
+        const [trending, movies, tv] = await Promise.all([
+          trendingRes.json(),
+          moviesRes.json(),
+          tvRes.json(),
+        ]);
+
+        if (canceled) return;
+
+        const heroItem = (trending?.results || [])[0];
+        if (heroItem) {
+          setHero({
+            title: heroItem.title || heroItem.name || heroContent.title,
+            subtitle: 'NETFLIX',
+            backdrop: img(heroItem.backdrop_path, 'original') || heroContent.backdrop,
+            rating: heroContent.rating,
+          });
+        }
+
+        const toItems = (list) =>
+          (list || []).slice(0, 8).map((item, index) => ({
+            id: String(item.id),
+            title: item.title || item.name || 'Untitled',
+            image: img(item.poster_path) || img(item.backdrop_path) || heroContent.backdrop,
+            badge: index < 3 ? 'Top 10' : null,
+          }));
+
+        const nextRows = [
+          {
+            id: 'trending',
+            title: 'Trending Now',
+            items: toItems(trending?.results),
+          },
+          {
+            id: 'popular-movies',
+            title: 'Popular Movies',
+            items: toItems(movies?.results),
+          },
+          {
+            id: 'popular-tv',
+            title: 'Popular TV',
+            items: toItems(tv?.results),
+          },
+        ].filter((row) => row.items.length > 0);
+
+        if (nextRows.length > 0) {
+          setRows(nextRows);
+        }
+      } catch (err) {
+        console.warn('TMDB fetch failed, using placeholder content.', err);
+      }
+    }
+
+    loadTmdb();
+    return () => {
+      canceled = true;
+    };
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -67,11 +143,11 @@ export default function HomePage({ onSignOut }) {
         </div>
       </header>
 
-      <section className="home-hero" style={{ backgroundImage: `url(${heroContent.backdrop})` }}>
+      <section className="home-hero" style={{ backgroundImage: `url(${hero.backdrop})` }}>
         <div className="home-hero-gradient" />
         <div className="home-hero-content">
-          <span className="home-hero-brand">{heroContent.subtitle}</span>
-          <h2 className="home-hero-title">{heroContent.title}</h2>
+          <span className="home-hero-brand">{hero.subtitle}</span>
+          <h2 className="home-hero-title">{hero.title}</h2>
           <div className="home-hero-actions">
             <button type="button" className="home-hero-play">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
@@ -95,12 +171,12 @@ export default function HomePage({ onSignOut }) {
               <path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14" />
             </svg>
           </button>
-          <span className="home-hero-rating">{heroContent.rating}</span>
+          <span className="home-hero-rating">{hero.rating}</span>
         </div>
       </section>
 
       <div className="home-rows">
-        {contentRows.map((row) => (
+        {rows.map((row) => (
           <section key={row.id} className="home-row">
             <h3 className="home-row-title">{row.title}</h3>
             <div className="home-row-scroll">
