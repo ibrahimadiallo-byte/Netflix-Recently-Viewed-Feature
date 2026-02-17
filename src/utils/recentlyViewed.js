@@ -45,3 +45,17 @@ export const trackView = (userId, content) => {
   window.localStorage.setItem(storageKey(userId), JSON.stringify(next));
   return next;
 };
+
+export const removeRecentlyViewed = (userId, contentId) => {
+  if (typeof window === 'undefined') return [];
+  const current = getRecentlyViewed(userId);
+  const next = current.filter((item) => item.contentId !== contentId);
+  window.localStorage.setItem(storageKey(userId), JSON.stringify(next));
+  return next;
+};
+
+export const clearRecentlyViewed = (userId) => {
+  if (typeof window === 'undefined') return [];
+  window.localStorage.removeItem(storageKey(userId));
+  return [];
+};

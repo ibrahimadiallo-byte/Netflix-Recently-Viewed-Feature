@@ -1,7 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { heroContent, contentRows } from '../data/dummyContent';
 import tmdbCache from '../data/tmdbCache.json';
-import { getRecentlyViewed, trackView } from '../utils/recentlyViewed';
+import {
+  getRecentlyViewed,
+  trackView,
+  removeRecentlyViewed,
+  clearRecentlyViewed,
+} from '../utils/recentlyViewed';
 import './HomePage.css';
 
 export default function HomePage({ onSignOut }) {
@@ -123,9 +128,38 @@ export default function HomePage({ onSignOut }) {
     setRecentlyViewed(next);
   };
 
+  const handleRemoveRecent = (contentId) => {
+    const next = removeRecentlyViewed(userId, contentId);
+    setRecentlyViewed(next);
+  };
+
+  const handleClearAll = () => {
+    const next = clearRecentlyViewed(userId);
+    setRecentlyViewed(next);
+  };
+
+  const formatRelativeTime = (iso) => {
+    if (!iso) return '';
+    const diffMs = Date.now() - new Date(iso).getTime();
+    const mins = Math.round(diffMs / 60000);
+    if (mins < 1) return 'Viewed just now';
+    if (mins < 60) return `Viewed ${mins} min ago`;
+    const hours = Math.round(mins / 60);
+    if (hours < 24) return `Viewed ${hours} hour${hours === 1 ? '' : 's'} ago`;
+    const days = Math.round(hours / 24);
+    return `Viewed ${days} day${days === 1 ? '' : 's'} ago`;
+  };
+
   const renderRow = (row) => (
     <section key={row.id} className="home-row">
-      <h3 className="home-row-title">{row.title}</h3>
+      <div className="home-row-header">
+        <h3 className="home-row-title">{row.title}</h3>
+        {row.id === 'recently-viewed' && row.items.length > 0 && (
+          <button type="button" className="home-row-clear" onClick={handleClearAll}>
+            Clear all
+          </button>
+        )}
+      </div>
       <div className="home-row-scroll">
         <div className="home-row-inner">
           {row.items.map((item) => (
@@ -138,6 +172,19 @@ export default function HomePage({ onSignOut }) {
             >
               <div className="home-thumb-img-wrap">
                 <img src={item.image} alt="" className="home-thumb-img" />
+                {row.id === 'recently-viewed' && (
+                  <button
+                    type="button"
+                    className="home-thumb-remove"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      handleRemoveRecent(item.id);
+                    }}
+                    aria-label={`Remove ${item.title}`}
+                  >
+                    ×
+                  </button>
+                )}
                 {item.badge && (
                   <span className="home-thumb-badge">{item.badge}</span>
                 )}
@@ -152,6 +199,9 @@ export default function HomePage({ onSignOut }) {
                 <div className="home-thumb-netflix-n" aria-hidden>N</div>
               </div>
               <p className="home-thumb-title">{item.title}</p>
+              {row.id === 'recently-viewed' && item.viewedAt && (
+                <p className="home-thumb-time">{formatRelativeTime(item.viewedAt)}</p>
+              )}
             </button>
           ))}
         </div>
@@ -171,6 +221,7 @@ export default function HomePage({ onSignOut }) {
       id: item.contentId,
       title: item.title,
       image: item.thumbnailUrl,
+      viewedAt: item.viewedAt,
       badge: null,
     })),
   };
@@ -263,7 +314,9 @@ export default function HomePage({ onSignOut }) {
           renderRow(recentRow)
         ) : (
           <section className="home-row">
-            <h3 className="home-row-title">Recently Viewed</h3>
+            <div className="home-row-header">
+              <h3 className="home-row-title">Recently Viewed</h3>
+            </div>
             <p className="home-row-empty">Nothing viewed yet. Click any title to see it here.</p>
           </section>
         )}
