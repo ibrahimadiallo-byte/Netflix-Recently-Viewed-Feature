@@ -1,13 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
 import { heroContent, contentRows } from '../data/dummyContent';
 import tmdbCache from '../data/tmdbCache.json';
+import { getRecentlyViewed, trackView } from '../utils/recentlyViewed';
 import './HomePage.css';
 
 export default function HomePage({ onSignOut }) {
   const [profileOpen, setProfileOpen] = useState(false);
   const [hero, setHero] = useState(heroContent);
   const [rows, setRows] = useState(contentRows);
+  const [recentlyViewed, setRecentlyViewed] = useState([]);
   const profileRef = useRef(null);
+  const userId = 'demo-user';
 
   useEffect(() => {
     const tmdbKey = import.meta.env.VITE_TMDB_KEY;
@@ -96,6 +99,10 @@ export default function HomePage({ onSignOut }) {
   }, []);
 
   useEffect(() => {
+    setRecentlyViewed(getRecentlyViewed(userId));
+  }, [userId]);
+
+  useEffect(() => {
     function handleClickOutside(e) {
       if (profileRef.current && !profileRef.current.contains(e.target)) {
         setProfileOpen(false);
@@ -104,6 +111,69 @@ export default function HomePage({ onSignOut }) {
     document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
+
+  const handleTrackView = (rowId, item) => {
+    const next = trackView(userId, {
+      id: item.id,
+      contentId: item.id,
+      title: item.title,
+      thumbnailUrl: item.image,
+      contentType: rowId,
+    });
+    setRecentlyViewed(next);
+  };
+
+  const renderRow = (row) => (
+    <section key={row.id} className="home-row">
+      <h3 className="home-row-title">{row.title}</h3>
+      <div className="home-row-scroll">
+        <div className="home-row-inner">
+          {row.items.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              className="home-thumb"
+              onClick={() => handleTrackView(row.id, item)}
+              aria-label={`View ${item.title}`}
+            >
+              <div className="home-thumb-img-wrap">
+                <img src={item.image} alt="" className="home-thumb-img" />
+                {item.badge && (
+                  <span className="home-thumb-badge">{item.badge}</span>
+                )}
+                {row.progressBar && item.progress != null && (
+                  <div className="home-thumb-progress">
+                    <div
+                      className="home-thumb-progress-fill"
+                      style={{ width: `${item.progress * 100}%` }}
+                    />
+                  </div>
+                )}
+                <div className="home-thumb-netflix-n" aria-hidden>N</div>
+              </div>
+              <p className="home-thumb-title">{item.title}</p>
+            </button>
+          ))}
+        </div>
+        <button type="button" className="home-row-arrow home-row-arrow-right" aria-label="Scroll right">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </button>
+      </div>
+    </section>
+  );
+
+  const recentRow = {
+    id: 'recently-viewed',
+    title: 'Recently Viewed',
+    items: recentlyViewed.map((item) => ({
+      id: item.contentId,
+      title: item.title,
+      image: item.thumbnailUrl,
+      badge: null,
+    })),
+  };
 
   return (
     <div className="home">
@@ -189,40 +259,15 @@ export default function HomePage({ onSignOut }) {
       </section>
 
       <div className="home-rows">
-        {rows.map((row) => (
-          <section key={row.id} className="home-row">
-            <h3 className="home-row-title">{row.title}</h3>
-            <div className="home-row-scroll">
-              <div className="home-row-inner">
-                {row.items.map((item) => (
-                  <div key={item.id} className="home-thumb">
-                    <div className="home-thumb-img-wrap">
-                      <img src={item.image} alt="" className="home-thumb-img" />
-                      {item.badge && (
-                        <span className="home-thumb-badge">{item.badge}</span>
-                      )}
-                      {row.progressBar && item.progress != null && (
-                        <div className="home-thumb-progress">
-                          <div
-                            className="home-thumb-progress-fill"
-                            style={{ width: `${item.progress * 100}%` }}
-                          />
-                        </div>
-                      )}
-                      <div className="home-thumb-netflix-n" aria-hidden>N</div>
-                    </div>
-                    <p className="home-thumb-title">{item.title}</p>
-                  </div>
-                ))}
-              </div>
-              <button type="button" className="home-row-arrow home-row-arrow-right" aria-label="Scroll right">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M9 18l6-6-6-6" />
-                </svg>
-              </button>
-            </div>
+        {recentlyViewed.length > 0 ? (
+          renderRow(recentRow)
+        ) : (
+          <section className="home-row">
+            <h3 className="home-row-title">Recently Viewed</h3>
+            <p className="home-row-empty">Nothing viewed yet. Click any title to see it here.</p>
           </section>
-        ))}
+        )}
+        {rows.map(renderRow)}
       </div>
     </div>
   );

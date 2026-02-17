@@ -258,6 +258,12 @@
   padding: 0 3rem;
 }
 
+.home-row-empty {
+  padding: 0 3rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+}
+
 .home-row-scroll {
   position: relative;
   padding: 0 2rem 0 3rem;
@@ -278,6 +284,12 @@
 }
 
 .home-thumb {
+  border: none;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
   flex-shrink: 0;
   width: clamp(140px, 18vw, 240px);
   scroll-snap-align: start;
@@ -296,6 +308,11 @@
 .home-thumb:hover .home-thumb-img-wrap {
   transform: scale(1.05);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.home-thumb:focus-visible .home-thumb-img-wrap {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
 }
 
 .home-thumb-img {
