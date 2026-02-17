@@ -31,7 +31,7 @@ export default function HomePage({ onSignOut }) {
       (list || []).slice(0, 8).map((item, index) => ({
         id: String(item.id ?? item.title ?? index),
         title: item.title || item.name || 'Untitled',
-        image: img(item.poster_path) || img(item.backdrop_path) || heroContent.backdrop,
+        image: img(item.backdrop_path, 'w780') || img(item.poster_path, 'w500') || heroContent.backdrop,
         badge: index < 3 ? 'Top 10' : null,
       }));
 

@@ -242,7 +242,7 @@
 /* Content rows */
 .home-rows {
   padding: 0 0 4rem;
-  margin-top: -120px;
+  margin-top: 1.5rem;
   position: relative;
   z-index: 2;
 }
@@ -328,6 +328,20 @@
   transition: transform 0.2s;
 }
 
+.home-thumb-img-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.05) 60%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  opacity: 0.7;
+  pointer-events: none;
+}
+
 .home-thumb:hover .home-thumb-img-wrap {
   transform: scale(1.05);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
@@ -373,6 +387,7 @@
 
 .home-thumb-badge {
   position: absolute;
+  z-index: 1;
   bottom: 0.35rem;
   left: 0.35rem;
   padding: 0.2rem 0.4rem;
@@ -384,6 +399,7 @@
 
 .home-thumb-progress {
   position: absolute;
+  z-index: 1;
   bottom: 0;
   left: 0;
   right: 0;
@@ -399,6 +415,7 @@
 
 .home-thumb-netflix-n {
   position: absolute;
+  z-index: 1;
   top: 0.25rem;
   left: 0.25rem;
   width: 20px;
