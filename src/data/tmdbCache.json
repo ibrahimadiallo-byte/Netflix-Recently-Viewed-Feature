@@ -1,0 +1,104 @@
+{
+  "trending": {
+    "results": [
+      {
+        "id": 1,
+        "title": "Stranger Things",
+        "poster_path": "https://picsum.photos/seed/tmdb-st/400/600",
+        "backdrop_path": "https://picsum.photos/seed/tmdb-st-bg/1920/1080"
+      },
+      {
+        "id": 2,
+        "title": "Breaking Bad",
+        "poster_path": "https://picsum.photos/seed/tmdb-bb/400/600",
+        "backdrop_path": "https://picsum.photos/seed/tmdb-bb-bg/1920/1080"
+      },
+      {
+        "id": 3,
+        "title": "The Crown",
+        "poster_path": "https://picsum.photos/seed/tmdb-crown/400/600",
+        "backdrop_path": "https://picsum.photos/seed/tmdb-crown-bg/1920/1080"
+      }
+    ]
+  },
+  "movies": {
+    "results": [
+      {
+        "id": 101,
+        "title": "The Gray Man",
+        "poster_path": "https://picsum.photos/seed/tmdb-gray/400/600",
+        "backdrop_path": "https://picsum.photos/seed/tmdb-gray-bg/1920/1080"
+      },
+      {
+        "id": 102,
+        "title": "Red Notice",
+        "poster_path": "https://picsum.photos/seed/tmdb-red/400/600",
+        "backdrop_path": "https://picsum.photos/seed/tmdb-red-bg/1920/1080"
+      },
+      {
+        "id": 103,
+        "title": "Extraction 2",
+        "poster_path": "https://picsum.photos/seed/tmdb-ex2/400/600",
+        "backdrop_path": "https://picsum.photos/seed/tmdb-ex2-bg/1920/1080"
+      },
+      {
+        "id": 104,
+        "title": "The Old Guard",
+        "poster_path": "https://picsum.photos/seed/tmdb-og/400/600",
+        "backdrop_path": "https://picsum.photos/seed/tmdb-og-bg/1920/1080"
+      },
+      {
+        "id": 105,
+        "title": "Bird Box",
+        "poster_path": "https://picsum.photos/seed/tmdb-bb/400/600",
+        "backdrop_path": "https://picsum.photos/seed/tmdb-bb-bg/1920/1080"
+      },
+      {
+        "id": 106,
+        "title": "Glass Onion",
+        "poster_path": "https://picsum.photos/seed/tmdb-go/400/600",
+        "backdrop_path": "https://picsum.photos/seed/tmdb-go-bg/1920/1080"
+      }
+    ]
+  },
+  "tv": {
+    "results": [
+      {
+        "id": 201,
+        "name": "Wednesday",
+        "poster_path": "https://picsum.photos/seed/tmdb-wed/400/600",
+        "backdrop_path": "https://picsum.photos/seed/tmdb-wed-bg/1920/1080"
+      },
+      {
+        "id": 202,
+        "name": "The Witcher",
+        "poster_path": "https://picsum.photos/seed/tmdb-witcher/400/600",
+        "backdrop_path": "https://picsum.photos/seed/tmdb-witcher-bg/1920/1080"
+      },
+      {
+        "id": 203,
+        "name": "Ozark",
+        "poster_path": "https://picsum.photos/seed/tmdb-ozark/400/600",
+        "backdrop_path": "https://picsum.photos/seed/tmdb-ozark-bg/1920/1080"
+      },
+      {
+        "id": 204,
+        "name": "Bridgerton",
+        "poster_path": "https://picsum.photos/seed/tmdb-bridge/400/600",
+        "backdrop_path": "https://picsum.photos/seed/tmdb-bridge-bg/1920/1080"
+      },
+      {
+        "id": 205,
+        "name": "Suits",
+        "poster_path": "https://picsum.photos/seed/tmdb-suits/400/600",
+        "backdrop_path": "https://picsum.photos/seed/tmdb-suits-bg/1920/1080"
+      },
+      {
+        "id": 206,
+        "name": "Mindhunter",
+        "poster_path": "https://picsum.photos/seed/tmdb-mind/400/600",
+        "backdrop_path": "https://picsum.photos/seed/tmdb-mind-bg/1920/1080"
+      }
+    ]
+  }
+}

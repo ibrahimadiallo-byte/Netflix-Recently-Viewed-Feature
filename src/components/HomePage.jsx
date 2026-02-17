@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { heroContent, contentRows } from '../data/dummyContent';
+import tmdbCache from '../data/tmdbCache.json';
 import './HomePage.css';
 
 export default function HomePage({ onSignOut }) {
@@ -10,13 +11,63 @@ export default function HomePage({ onSignOut }) {
 
   useEffect(() => {
     const tmdbKey = import.meta.env.VITE_TMDB_KEY;
-    if (!tmdbKey) return;
-
     let canceled = false;
-    const img = (path, size = 'w500') =>
-      path ? `https://image.tmdb.org/t/p/${size}${path}` : null;
+
+    const img = (path, size = 'w500') => {
+      if (!path) return null;
+      if (path.startsWith('http')) return path;
+      return `https://image.tmdb.org/t/p/${size}${path}`;
+    };
+
+    const toItems = (list) =>
+      (list || []).slice(0, 8).map((item, index) => ({
+        id: String(item.id ?? item.title ?? index),
+        title: item.title || item.name || 'Untitled',
+        image: img(item.poster_path) || img(item.backdrop_path) || heroContent.backdrop,
+        badge: index < 3 ? 'Top 10' : null,
+      }));
+
+    const applyData = (data) => {
+      if (!data) return;
+      const heroItem = (data?.trending?.results || [])[0];
+      if (heroItem) {
+        setHero({
+          title: heroItem.title || heroItem.name || heroContent.title,
+          subtitle: 'NETFLIX',
+          backdrop: img(heroItem.backdrop_path, 'original') || heroContent.backdrop,
+          rating: heroContent.rating,
+        });
+      }
+
+      const nextRows = [
+        {
+          id: 'trending',
+          title: 'Trending Now',
+          items: toItems(data?.trending?.results),
+        },
+        {
+          id: 'popular-movies',
+          title: 'Popular Movies',
+          items: toItems(data?.movies?.results),
+        },
+        {
+          id: 'popular-tv',
+          title: 'Popular TV',
+          items: toItems(data?.tv?.results),
+        },
+      ].filter((row) => row.items.length > 0);
+
+      if (nextRows.length > 0) {
+        setRows(nextRows);
+      }
+    };
 
     async function loadTmdb() {
+      if (!tmdbKey) {
+        applyData(tmdbCache);
+        return;
+      }
+
       try {
         const [trendingRes, moviesRes, tvRes] = await Promise.all([
           fetch(`https://api.themoviedb.org/3/trending/all/week?api_key=${tmdbKey}`),
@@ -31,48 +82,10 @@ export default function HomePage({ onSignOut }) {
         ]);
 
         if (canceled) return;
-
-        const heroItem = (trending?.results || [])[0];
-        if (heroItem) {
-          setHero({
-            title: heroItem.title || heroItem.name || heroContent.title,
-            subtitle: 'NETFLIX',
-            backdrop: img(heroItem.backdrop_path, 'original') || heroContent.backdrop,
-            rating: heroContent.rating,
-          });
-        }
-
-        const toItems = (list) =>
-          (list || []).slice(0, 8).map((item, index) => ({
-            id: String(item.id),
-            title: item.title || item.name || 'Untitled',
-            image: img(item.poster_path) || img(item.backdrop_path) || heroContent.backdrop,
-            badge: index < 3 ? 'Top 10' : null,
-          }));
-
-        const nextRows = [
-          {
-            id: 'trending',
-            title: 'Trending Now',
-            items: toItems(trending?.results),
-          },
-          {
-            id: 'popular-movies',
-            title: 'Popular Movies',
-            items: toItems(movies?.results),
-          },
-          {
-            id: 'popular-tv',
-            title: 'Popular TV',
-            items: toItems(tv?.results),
-          },
-        ].filter((row) => row.items.length > 0);
-
-        if (nextRows.length > 0) {
-          setRows(nextRows);
-        }
+        applyData({ trending, movies, tv });
       } catch (err) {
-        console.warn('TMDB fetch failed, using placeholder content.', err);
+        console.warn('TMDB fetch failed, using cached data.', err);
+        if (!canceled) applyData(tmdbCache);
       }
     }
 
