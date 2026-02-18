@@ -22,6 +22,7 @@ export default function HomePage({ onSignOut }) {
 
   useEffect(() => {
     const tmdbKey = import.meta.env.VITE_TMDB_KEY;
+    const useTmdb = String(import.meta.env.VITE_USE_TMDB || '').toLowerCase() === 'true';
     let canceled = false;
 
     const img = (path, size = 'w500') => {
@@ -74,6 +75,9 @@ export default function HomePage({ onSignOut }) {
     };
 
     async function loadTmdb() {
+      if (!useTmdb) {
+        return;
+      }
       if (!tmdbKey) {
         applyData(tmdbCache);
         return;
