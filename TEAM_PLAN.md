@@ -39,6 +39,31 @@ Then open **http://localhost:5173** in your browser.
 - **Landing page** → Click **Sign In** to see the logged-in homepage.
 - **Profile (green avatar) → “Sign out of Netflix”** → back to landing.
 
+### Team setup notes (new)
+
+- Pull latest main before working:
+
+```bash
+git pull origin main
+```
+
+- Local posters/backdrop are bundled, so everyone should see the same images by default.
+- TMDB is **off by default**. Enable only if needed:
+
+```env
+VITE_USE_TMDB=true
+VITE_TMDB_KEY=your_key
+```
+
+- API mode (Railway) if you want backend storage:
+
+```env
+VITE_USE_API=true
+VITE_API_URL=https://<railway-app>.up.railway.app
+```
+
+- The hero badge shows **Local Mode** or **API Mode** so you can confirm which data source is active.
+
 ---
 
 ## 2. What’s already done
