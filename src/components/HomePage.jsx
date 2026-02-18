@@ -6,6 +6,7 @@ import {
   trackView,
   removeRecentlyViewed,
   clearRecentlyViewed,
+  isUsingApi,
 } from '../utils/recentlyViewed';
 import './HomePage.css';
 
@@ -106,7 +107,15 @@ export default function HomePage({ onSignOut }) {
   }, []);
 
   useEffect(() => {
-    setRecentlyViewed(getRecentlyViewed(userId));
+    let mounted = true;
+    const loadRecentlyViewed = async () => {
+      const items = await getRecentlyViewed(userId);
+      if (mounted) setRecentlyViewed(items);
+    };
+    loadRecentlyViewed();
+    return () => {
+      mounted = false;
+    };
   }, [userId]);
 
   useEffect(() => {
@@ -128,25 +137,49 @@ export default function HomePage({ onSignOut }) {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-  const handleTrackView = (rowId, item) => {
-    const next = trackView(userId, {
+  const handleTrackView = async (rowId, item) => {
+    const next = await trackView(userId, {
       id: item.id,
       contentId: item.id,
       title: item.title,
       thumbnailUrl: item.image,
       contentType: rowId,
     });
-    setRecentlyViewed(next);
+    if (Array.isArray(next)) {
+      setRecentlyViewed(next);
+      return;
+    }
+
+    if (isUsingApi()) {
+      const items = await getRecentlyViewed(userId);
+      setRecentlyViewed(items);
+    }
   };
 
-  const handleRemoveRecent = (contentId) => {
-    const next = removeRecentlyViewed(userId, contentId);
-    setRecentlyViewed(next);
+  const handleRemoveRecent = async (contentId) => {
+    const next = await removeRecentlyViewed(userId, contentId);
+    if (Array.isArray(next)) {
+      setRecentlyViewed(next);
+      return;
+    }
+
+    if (isUsingApi()) {
+      const items = await getRecentlyViewed(userId);
+      setRecentlyViewed(items);
+    }
   };
 
-  const handleClearAll = () => {
-    const next = clearRecentlyViewed(userId);
-    setRecentlyViewed(next);
+  const handleClearAll = async () => {
+    const next = await clearRecentlyViewed(userId);
+    if (Array.isArray(next)) {
+      setRecentlyViewed(next);
+      return;
+    }
+
+    if (isUsingApi()) {
+      const items = await getRecentlyViewed(userId);
+      setRecentlyViewed(items);
+    }
   };
 
   const formatRelativeTime = (iso) => {
