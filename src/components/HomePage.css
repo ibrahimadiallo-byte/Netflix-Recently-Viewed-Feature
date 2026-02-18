@@ -158,6 +158,21 @@
   padding: 0 0 8% 3rem;
 }
 
+.home-env-badge {
+  position: absolute;
+  top: 85px;
+  left: 3rem;
+  z-index: 2;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(0, 0, 0, 0.5);
+  color: rgba(255, 255, 255, 0.85);
+}
+
 .home-hero-gradient {
   position: absolute;
   inset: 0;

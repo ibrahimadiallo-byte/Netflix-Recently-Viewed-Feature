@@ -396,6 +396,9 @@ export default function HomePage({ onSignOut }) {
       )}
 
       <section className="home-hero" style={{ backgroundImage: `url(${hero.backdrop})` }}>
+        <span className="home-env-badge">
+          {isUsingApi() ? 'API Mode' : 'Local Mode'}
+        </span>
         <div className="home-hero-gradient" />
         <div className="home-hero-content">
           <span className="home-hero-brand">{hero.subtitle}</span>
