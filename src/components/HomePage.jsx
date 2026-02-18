@@ -14,6 +14,8 @@ export default function HomePage({ onSignOut }) {
   const [hero, setHero] = useState(heroContent);
   const [rows, setRows] = useState(contentRows);
   const [recentlyViewed, setRecentlyViewed] = useState([]);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const profileRef = useRef(null);
   const userId = 'demo-user';
 
@@ -108,6 +110,15 @@ export default function HomePage({ onSignOut }) {
   }, [userId]);
 
   useEffect(() => {
+    if (!searchOpen) return;
+    const { overflow } = document.body.style;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = overflow;
+    };
+  }, [searchOpen]);
+
+  useEffect(() => {
     function handleClickOutside(e) {
       if (profileRef.current && !profileRef.current.contains(e.target)) {
         setProfileOpen(false);
@@ -149,6 +160,19 @@ export default function HomePage({ onSignOut }) {
     const days = Math.round(hours / 24);
     return `Viewed ${days} day${days === 1 ? '' : 's'} ago`;
   };
+
+  const allItems = rows.flatMap((row) =>
+    row.items.map((item) => ({
+      ...item,
+      rowId: row.id,
+    }))
+  );
+
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+  const searchResults =
+    normalizedQuery.length === 0
+      ? []
+      : allItems.filter((item) => item.title.toLowerCase().includes(normalizedQuery));
 
   const renderRow = (row) => (
     <section key={row.id} className="home-row">
@@ -242,7 +266,12 @@ export default function HomePage({ onSignOut }) {
           </nav>
         </div>
         <div className="home-header-right">
-          <button type="button" className="home-icon-btn" aria-label="Search">
+          <button
+            type="button"
+            className="home-icon-btn"
+            aria-label="Search"
+            onClick={() => setSearchOpen(true)}
+          >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="11" cy="11" r="8" />
               <path d="m21 21-4.35-4.35" />
@@ -276,6 +305,62 @@ export default function HomePage({ onSignOut }) {
           </div>
         </div>
       </header>
+
+      {searchOpen && (
+        <div className="home-search-overlay" onClick={() => setSearchOpen(false)}>
+          <div className="home-search-panel" onClick={(event) => event.stopPropagation()}>
+            <aside className="home-search-sidebar">
+              <div className="home-search-input">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.35-4.35" />
+                </svg>
+                <input
+                  type="text"
+                  placeholder="Search"
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  autoFocus
+                />
+                {searchQuery && (
+                  <button type="button" className="home-search-clear" onClick={() => setSearchQuery('')}>
+                    ×
+                  </button>
+                )}
+              </div>
+              <nav className="home-search-nav">
+                <span className="home-search-nav-item active">Search</span>
+                <span className="home-search-nav-item">Home</span>
+                <span className="home-search-nav-item">Latest</span>
+                <span className="home-search-nav-item">TV Shows</span>
+                <span className="home-search-nav-item">Movies</span>
+                <span className="home-search-nav-item">My List</span>
+                <span className="home-search-nav-item muted">Get Help</span>
+                <span className="home-search-nav-item muted">Exit Netflix</span>
+              </nav>
+            </aside>
+            <div className="home-search-results">
+              <h3>Popular Searches</h3>
+              <div className="home-search-grid">
+                {(searchResults.length > 0 ? searchResults : allItems.slice(0, 12)).map((item) => (
+                  <button
+                    key={`search-${item.id}`}
+                    type="button"
+                    className="home-search-card"
+                    onClick={() => {
+                      handleTrackView(item.rowId, item);
+                      setSearchOpen(false);
+                    }}
+                  >
+                    <img src={item.image} alt={item.title} />
+                    <span className="home-search-card-title">{item.title}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <section className="home-hero" style={{ backgroundImage: `url(${hero.backdrop})` }}>
         <div className="home-hero-gradient" />

@@ -239,6 +239,139 @@
   border-radius: 2px;
 }
 
+/* Search overlay */
+.home-search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(6px);
+  overflow: hidden;
+}
+
+.home-search-panel {
+  display: grid;
+  grid-template-columns: minmax(220px, 300px) 1fr;
+  height: 100vh;
+  width: 100%;
+  background: transparent;
+}
+
+.home-search-input {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: white;
+}
+
+.home-search-input input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 1rem;
+}
+
+.home-search-input input:focus {
+  outline: none;
+}
+
+.home-search-clear {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  font-size: 1.1rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.home-search-clear:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.home-search-results {
+  padding: 120px 3rem 3rem 2rem;
+  overflow-y: auto;
+}
+
+.home-search-results h3 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.home-search-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.home-search-card {
+  border: none;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.home-search-card img {
+  width: 100%;
+  border-radius: 6px;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.home-search-card:hover img {
+  transform: scale(1.04);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.home-search-card-title {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.home-search-sidebar {
+  padding: 120px 1.5rem 2rem 2rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.home-search-nav {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  font-size: 1.05rem;
+}
+
+.home-search-nav-item {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.home-search-nav-item.active {
+  color: white;
+  font-weight: 600;
+}
+
+.home-search-nav-item.muted {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+}
+
 /* Content rows */
 .home-rows {
   padding: 0 0 4rem;
