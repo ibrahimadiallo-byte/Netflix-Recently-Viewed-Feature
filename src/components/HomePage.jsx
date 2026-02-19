@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { heroContent, contentRows } from '../data/dummyContent';
 import tmdbCache from '../data/tmdbCache.json';
@@ -9,6 +10,9 @@ import {
   isUsingApi,
 } from '../utils/recentlyViewed';
 import './HomePage.css';
+import Footer from './Footer';
+import ContentModal from './ContentModal';
+
 
 export default function HomePage({ onSignOut }) {
   const [profileOpen, setProfileOpen] = useState(false);
@@ -19,10 +23,12 @@ export default function HomePage({ onSignOut }) {
   const [searchQuery, setSearchQuery] = useState('');
   const profileRef = useRef(null);
   const userId = 'demo-user';
+  
 
   useEffect(() => {
     const tmdbKey = import.meta.env.VITE_TMDB_KEY;
     const useTmdb = String(import.meta.env.VITE_USE_TMDB || '').toLowerCase() === 'true';
+    const [selectedItem, setSelectedItem] = useState(null);
     let canceled = false;
 
     const img = (path, size = 'w500') => {
@@ -158,6 +164,7 @@ export default function HomePage({ onSignOut }) {
       const items = await getRecentlyViewed(userId);
       setRecentlyViewed(items);
     }
+    setSelectedItem({ ...item, contentType: rowId });
   };
 
   const handleRemoveRecent = async (contentId) => {
