@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { heroContent, contentRows } from '../data/dummyContent';
 import tmdbCache from '../data/tmdbCache.json';
@@ -21,6 +20,7 @@ export default function HomePage({ onSignOut }) {
   const [recentlyViewed, setRecentlyViewed] = useState([]);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedItem, setSelectedItem] = useState(null);
   const profileRef = useRef(null);
   const userId = 'demo-user';
   
@@ -28,7 +28,6 @@ export default function HomePage({ onSignOut }) {
   useEffect(() => {
     const tmdbKey = import.meta.env.VITE_TMDB_KEY;
     const useTmdb = String(import.meta.env.VITE_USE_TMDB || '').toLowerCase() === 'true';
-    const [selectedItem, setSelectedItem] = useState(null);
     let canceled = false;
 
     const img = (path, size = 'w500') => {
@@ -454,6 +453,9 @@ export default function HomePage({ onSignOut }) {
         )}
         {rows.map(renderRow)}
       </div>
+
+      <Footer />
+      <ContentModal item={selectedItem} onClose={() => setSelectedItem(null)} />
     </div>
   );
 }
