@@ -9,6 +9,9 @@ import {
   isUsingApi,
 } from '../utils/recentlyViewed';
 import './HomePage.css';
+import Footer from './Footer';
+import ContentModal from './ContentModal';
+
 
 export default function HomePage({ onSignOut }) {
   const [profileOpen, setProfileOpen] = useState(false);
@@ -17,8 +20,10 @@ export default function HomePage({ onSignOut }) {
   const [recentlyViewed, setRecentlyViewed] = useState([]);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedItem, setSelectedItem] = useState(null);
   const profileRef = useRef(null);
   const userId = 'demo-user';
+  
 
   useEffect(() => {
     const tmdbKey = import.meta.env.VITE_TMDB_KEY;
@@ -158,6 +163,7 @@ export default function HomePage({ onSignOut }) {
       const items = await getRecentlyViewed(userId);
       setRecentlyViewed(items);
     }
+    setSelectedItem({ ...item, contentType: rowId });
   };
 
   const handleRemoveRecent = async (contentId) => {
@@ -447,6 +453,9 @@ export default function HomePage({ onSignOut }) {
         )}
         {rows.map(renderRow)}
       </div>
+
+      <Footer />
+      <ContentModal item={selectedItem} onClose={() => setSelectedItem(null)} />
     </div>
   );
 }
